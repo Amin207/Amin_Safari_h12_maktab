@@ -1,3 +1,5 @@
+const _ = require("lodash");
+
 //-------------------------------------------------------------------
 
 // Exercise #01
@@ -61,20 +63,101 @@ const sendMail = () => {
 
 const docx_pdf = require("docx-pdf");
 
+const input = "../files/dummy-word.docx";
+const output = "../export/dummy-word.pdf";
+
 const convertToPDF = () => {
-  docx_pdf(
-    "../files/dummy-word.docx",
-    "../export/dummy-word.pdf",
-    (err, result) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log("Result: ", result);
-      }
+  docx_pdf(input, output, (err, result) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log("Result: ", result);
     }
-  );
+  });
 };
 
 // convertToPDF();
+
+//-------------------------------------------------------------------
+
+// Exercise #03
+
+const axios = require("axios");
+const Excel = require("exceljs");
+
+const getData = () => {
+  return new Promise((resolve, reject) => {
+    const method = "get";
+    const url = "https://reqres.in/api/users?page=1";
+    const headers = { "Content-Type": "application/json" };
+
+    axios({
+      method: method,
+      url: url,
+      headers: headers,
+    })
+      .then(({ data }) => {
+        resolve(data.data);
+      })
+      .catch((err) => {
+        reject(console.log(err));
+      });
+  });
+};
+
+const createWorksheet = (data) => {
+  return new Promise((resolve, reject) => {
+    let workbook = new Excel.Workbook();
+    let worksheet = workbook.addWorksheet("Sheet #1");
+    const OUTPUT = "../export/user-data.xlsx";
+
+    worksheet.columns = [
+      { header: "id", key: "id" },
+      { header: "email", key: "email" },
+      { header: "first_name", key: "first_name" },
+      { header: "last_name", key: "last_name" },
+      { header: "avatar", key: "avatar" },
+    ];
+
+    data.forEach((r) => {
+      worksheet.addRow(r);
+    });
+
+    const maxLengths = [];
+    worksheet.eachRow((row) => {
+      row.eachCell((cell, colNumber) => {
+        const columnIndex = cell.col - 1;
+        if (colNumber === 1) {
+          cell.alignment = { horizontal: "left" };
+        }
+        if (
+          !maxLengths[columnIndex] ||
+          cell.value.toString().length > maxLengths[columnIndex]
+        ) {
+          maxLengths[columnIndex] = cell.value.toString().length;
+        }
+      });
+    });
+
+    maxLengths.forEach((maxLength, index) => {
+      worksheet.getColumn(index + 1).width = maxLength;
+    });
+
+    workbook.xlsx.writeFile(OUTPUT).then(function () {
+      console.log("File written successfully");
+    });
+  });
+};
+
+const buildXLSX = async () => {
+  try {
+    const userData = await getData();
+    await createWorksheet(userData);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// buildXLSX();
 
 //-------------------------------------------------------------------
