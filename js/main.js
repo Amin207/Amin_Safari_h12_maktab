@@ -7,7 +7,7 @@ const _ = require("lodash");
 const nodemailer = require("nodemailer");
 const SD = require("../sensitive-data");
 
-const subject = "Another subject from nodemailer";
+const subject = "SAFARI - NODEMAILER";
 const text = "Another one with attachment!";
 const attachments = [
   {
@@ -26,7 +26,7 @@ const transporter = nodemailer.createTransport({
 
 const mailOptions = {
   from: SD.email,
-  to: SD.email,
+  to: "askarimatin79@gmail.com",
   subject: subject,
   text: text,
   attachments: attachments,
@@ -113,7 +113,7 @@ const createWorksheet = (data) => {
     let workbook = new Excel.Workbook();
     let worksheet = workbook.addWorksheet("Sheet #1");
 
-    const OUTPUT = "../export/user-data.xlsx";
+    const OUTPUT = "./export/user-data.xlsx";
 
     worksheet.columns = columns;
 
@@ -300,6 +300,6 @@ const runProcess = async () => {
   }
 };
 
-runProcess();
+// runProcess();
 
 //-------------------------------------------------------------------
