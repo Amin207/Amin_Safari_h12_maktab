@@ -106,18 +106,16 @@ const getData = () => {
 };
 
 const createWorksheet = (data) => {
+  let columns = [];
+  _.keys(data[0]).forEach((c) => columns.push({ header: c, key: c }));
+
   return new Promise((resolve, reject) => {
     let workbook = new Excel.Workbook();
     let worksheet = workbook.addWorksheet("Sheet #1");
+
     const OUTPUT = "../export/user-data.xlsx";
 
-    worksheet.columns = [
-      { header: "id", key: "id" },
-      { header: "email", key: "email" },
-      { header: "first_name", key: "first_name" },
-      { header: "last_name", key: "last_name" },
-      { header: "avatar", key: "avatar" },
-    ];
+    worksheet.columns = columns;
 
     data.forEach((r) => {
       worksheet.addRow(r);
