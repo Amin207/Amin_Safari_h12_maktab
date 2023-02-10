@@ -10,7 +10,7 @@ const text = "Another one with attachment!";
 const attachments = [
   {
     filename: "user-data.json",
-    path: "../user-data.json",
+    path: "../files/user-data.json",
   },
 ];
 
@@ -54,5 +54,27 @@ const sendMail = () => {
 
 // verifyTrasporter();
 // sendMail();
+
+//-------------------------------------------------------------------
+
+// Exercise #02
+
+const docx_pdf = require("docx-pdf");
+
+const convertToPDF = () => {
+  docx_pdf(
+    "../files/dummy-word.docx",
+    "../export/dummy-word.pdf",
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log("Result: ", result);
+      }
+    }
+  );
+};
+
+// convertToPDF();
 
 //-------------------------------------------------------------------
