@@ -161,3 +161,27 @@ const buildXLSX = async () => {
 // buildXLSX();
 
 //-------------------------------------------------------------------
+
+// Exercise 04
+
+const sharp = require("sharp");
+
+const DIR = "../files/test-image.png";
+const OUTPUT = "../export/test-image.jpg";
+
+const convertImage = () => {
+  sharp(DIR)
+    .resize(500, 500)
+    .jpeg({ quality: 90 })
+    .toFile(OUTPUT, (err, info) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log("Image conversion successfull!/nResult: ", info);
+      }
+    });
+};
+
+// convertImage();
+
+//-------------------------------------------------------------------
