@@ -1,32 +1,43 @@
 const _ = require("lodash");
+require("dotenv").config();
+
 
 //------------------------------------------------------------------- NODE AREA
 
 // Exercise #01
 
 const nodemailer = require("nodemailer");
-const SD = require("../sensitive-data");
 
-const subject = "SAFARI - NODEMAILER";
-const text = "Another one with attachment!";
-const attachments = [
-  {
-    filename: "user-data.json",
-    path: "./files/user-data.json",
-  },
-];
+// A .env file in root directory of project is needed, plus adding these 3 lines :
+//
+// SMTP_SERVICE=gmail
+// SMTP_EMAIL=*Your Email*
+// SMTP_PASSWORD=*Your App password after activating 2-step verification*
+//
+// For google app password : https://miracleio.me/snippets/use-gmail-with-nodemailer/#:~:text=your%20Gmail%20account.-,Enable%202%2DStep%20Verification,-To%20generate%20app
+
+const from = process.env.SMTP_EMAIL,
+  to = "Your Reciever's Email",
+  subject = "Your Subject",
+  text = "Your Text",
+  attachments = [
+    {
+      filename: "user-data.json",
+      path: "./files/user-data.json",
+    },
+  ];
 
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  service: process.env.SMTP_SERVICE,
   auth: {
-    user: SD.email,
-    pass: SD.password,
+    user: process.env.SMTP_EMAIL,
+    pass: process.env.SMTP_PASSWORD,
   },
 });
 
 const mailOptions = {
-  from: SD.email,
-  to: "askarimatin79@gmail.com",
+  from: from,
+  to: to,
   subject: subject,
   text: text,
   attachments: attachments,
@@ -187,6 +198,7 @@ const convertImage = () => {
 // Exercise #03
 
 const fs = require("fs");
+const { env } = require("process");
 
 const createFiles = () => {
   return new Promise((resolve, reject) => {
